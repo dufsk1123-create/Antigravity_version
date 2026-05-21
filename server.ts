@@ -14,13 +14,13 @@ app.use(express.json());
 // AI Move Endpoint
 app.post("/api/move", async (req, res) => {
   try {
-    const { board } = req.body;
+    const { board, supply } = req.body;
     
-    if (!board || !Array.isArray(board)) {
-      return res.status(400).json({ error: "Invalid board state" });
+    if (!board || !Array.isArray(board) || !supply) {
+      return res.status(400).json({ error: "Invalid board or supply state" });
     }
 
-    const result = await generateNextMove(board);
+    const result = await generateNextMove(board, supply);
     res.json(result);
   } catch (error) {
     if (error instanceof Error && error.message === "No moves available") {

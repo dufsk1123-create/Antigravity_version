@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { Trophy, AlertCircle } from 'lucide-react';
+import { Trophy, AlertCircle, Sparkles } from 'lucide-react';
 import { Player } from '../constants';
 
 interface GameStatusProps {
@@ -10,7 +10,7 @@ interface GameStatusProps {
 
 export function GameStatus({ isThinking, winner, xIsNext }: GameStatusProps) {
   return (
-    <div className="h-24 flex flex-col justify-end">
+    <div className="h-28 flex flex-col justify-end">
       <AnimatePresence mode="wait">
         {isThinking ? (
           <motion.div
@@ -18,7 +18,7 @@ export function GameStatus({ isThinking, winner, xIsNext }: GameStatusProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex items-center space-x-3 text-fuchsia-400"
+            className="flex items-center space-x-3 text-[#81B29A] p-4 bg-[#81B29A]/10 border border-[#81B29A]/20 rounded-2xl"
           >
             <div className="flex space-x-1">
               {[0, 1, 2].map(i => (
@@ -26,13 +26,13 @@ export function GameStatus({ isThinking, winner, xIsNext }: GameStatusProps) {
                   key={i}
                   animate={{ scaleY: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
                   transition={{ repeat: Infinity, duration: 1, delay: i * 0.15 }}
-                  className="w-1 h-4 bg-current"
+                  className="w-1.5 h-4 bg-current rounded-full"
                 />
               ))}
             </div>
             <div className="flex flex-col">
-              <span className="font-mono text-xs text-fuchsia-400/80 tracking-widest block">⚡ AI THINKING (AI 연산 중...)</span>
-              <span className="font-mono text-sm uppercase tracking-widest font-bold">Processing Move...</span>
+              <span className="font-sans text-xs tracking-wider font-extrabold uppercase">Thinking... 💭</span>
+              <span className="font-serif text-sm italic text-[#2F3E46]">Gemini가 고민을 거듭하고 있어요</span>
             </div>
           </motion.div>
         ) : !winner ? (
@@ -41,17 +41,21 @@ export function GameStatus({ isThinking, winner, xIsNext }: GameStatusProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="space-y-1"
+            className={`p-4 border rounded-2xl transition-all duration-300 ${
+              xIsNext 
+                ? 'border-[#E07A5F]/20 bg-[#E07A5F]/5 text-[#E07A5F]' 
+                : 'border-[#81B29A]/20 bg-[#81B29A]/5 text-[#81B29A]'
+            }`}
           >
-            <span className="font-mono text-xs text-neutral-400 uppercase tracking-widest block">
-              ● System Status: Online (기기 활성화)
-            </span>
-            <div className="flex flex-col">
-              <span className={`font-mono text-xs tracking-wider ${xIsNext ? 'text-cyan-400/80' : 'text-fuchsia-400/80'}`}>
-                {xIsNext ? "► PLAYER TURN (당신의 차례)" : "► AI TURN (상대방 차례)"}
-              </span>
-              <div className={`text-2xl font-bold uppercase tracking-tighter italic ${xIsNext ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                  {xIsNext ? "// PLR_STRAT_PHASE" : "// AI_COG_EVAL"}
+            <div className="flex items-center space-x-2.5">
+              <Sparkles className="w-4 h-4 animate-pulse" />
+              <div className="flex flex-col">
+                <span className="font-sans text-xs tracking-widest font-extrabold uppercase">
+                  {xIsNext ? "Your Turn ✿" : "Gemini's Turn ✿"}
+                </span>
+                <span className="font-serif text-sm italic text-[#2F3E46]">
+                  {xIsNext ? "당신의 예쁜 돌을 놓아주세요" : "인공지능이 수를 고르고 있어요"}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -60,20 +64,30 @@ export function GameStatus({ isThinking, winner, xIsNext }: GameStatusProps) {
             key="winner"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className={`p-3 border-l-4 ${winner === 'draw' ? 'border-neutral-500 bg-neutral-900/50' : winner === 'X' ? 'border-cyan-500 bg-cyan-500/10' : 'border-fuchsia-500 bg-fuchsia-500/10'}`}
+            className={`p-4 border rounded-2xl ${
+              winner === 'draw' 
+                ? 'border-[#8E9AAF]/30 bg-[#8E9AAF]/10 text-[#8E9AAF]' 
+                : winner === 'X' 
+                  ? 'border-[#E07A5F]/30 bg-[#E07A5F]/10 text-[#E07A5F]' 
+                  : 'border-[#81B29A]/30 bg-[#81B29A]/10 text-[#81B29A]'
+            }`}
           >
             <div className="flex items-center space-x-3">
               {winner !== 'draw' ? (
-                <Trophy className={`w-5 h-5 ${winner === 'X' ? 'text-cyan-400' : 'text-fuchsia-400'}`} />
+                <Trophy className="w-5 h-5 animate-bounce" />
               ) : (
-                <AlertCircle className="w-5 h-5 text-neutral-400" />
+                <AlertCircle className="w-5 h-5" />
               )}
               <div className="flex flex-col">
-                <span className={`font-mono text-xs tracking-wider font-bold ${winner === 'draw' ? 'text-neutral-400' : winner === 'X' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                  {winner === 'draw' ? '[DRAW] 무승부 (승자 없음)' : winner === 'X' ? '[VICTORY] 승리 (PLAYER)' : '[DEFEAT] 패배 (AI)'}
+                <span className="font-sans text-xs tracking-wider font-extrabold uppercase">
+                  {winner === 'draw' ? "Friendly Draw" : winner === 'X' ? "Victory for You!" : "Victory for Gemini!"}
                 </span>
-                <span className={`text-lg font-black uppercase italic tracking-tighter ${winner === 'draw' ? 'text-neutral-400' : winner === 'X' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                  {winner === 'draw' ? 'Session Terminated: No Advantage' : `${winner} Dominance Established`}
+                <span className="font-serif text-sm italic text-[#2F3E46]">
+                  {winner === 'draw' 
+                    ? "서로 비겼어요! 좋은 승부였습니다 🤝" 
+                    : winner === 'X' 
+                      ? "축하해요! 당신이 지혜롭게 이겼어요 🎉" 
+                      : "Gemini가 이겼어요! 다음 판에 다시 도전해봐요 🧸"}
                 </span>
               </div>
             </div>
