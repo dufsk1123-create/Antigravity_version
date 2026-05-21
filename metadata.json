@@ -1,0 +1,8 @@
+{
+  "name": "Modern Tic-Tac-Toe",
+  "description": "A clean, responsive Tic-Tac-Toe game with local score tracking and win animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
